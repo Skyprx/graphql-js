@@ -1,9 +1,12 @@
-// @flow strict
-
 import { GraphQLError } from '../../error/GraphQLError';
-import { type ASTVisitor } from '../../language/visitor';
 
-import { type SDLValidationContext } from '../ValidationContext';
+import type { ASTVisitor } from '../../language/visitor';
+import type {
+  SchemaDefinitionNode,
+  SchemaExtensionNode,
+} from '../../language/ast';
+
+import type { SDLValidationContext } from '../ValidationContext';
 
 /**
  * Unique operation types
@@ -28,7 +31,9 @@ export function UniqueOperationTypesRule(
     SchemaExtension: checkOperationTypes,
   };
 
-  function checkOperationTypes(node) {
+  function checkOperationTypes(
+    node: SchemaDefinitionNode | SchemaExtensionNode,
+  ) {
     // istanbul ignore next (See: 'https://github.com/graphql/graphql-js/issues/2203')
     const operationTypesNodes = node.operationTypes ?? [];
 

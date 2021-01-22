@@ -1,5 +1,3 @@
-// @flow strict
-
 import { describe, it } from 'mocha';
 
 import dedent from '../../__testUtils__/dedent';
@@ -13,7 +11,7 @@ import { Source } from '../../language/source';
 
 import { stripIgnoredCharacters } from '../stripIgnoredCharacters';
 
-function lexValue(str) {
+function lexValue(str: string) {
   const lexer = new Lexer(new Source(str));
   const value = lexer.advance().value;
 

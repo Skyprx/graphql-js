@@ -1,5 +1,3 @@
-// @flow strict
-
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
@@ -10,13 +8,14 @@ import { parse } from '../../language/parser';
 import { TypeInfo } from '../../utilities/TypeInfo';
 import { buildSchema } from '../../utilities/buildASTSchema';
 
+import type { ValidationContext } from '../ValidationContext';
 import { validate } from '../validate';
 
 import { testSchema } from './harness';
 
 describe('Validate: Supports full validation', () => {
   it('rejects invalid documents', () => {
-    // $DisableFlowOnNegativeTest
+    // $FlowExpectedError[incompatible-call]
     expect(() => validate(testSchema, null)).to.throw('Must provide document.');
   });
 
@@ -97,7 +96,7 @@ describe('Validate: Supports full validation', () => {
       }
     `);
 
-    function customRule(context) {
+    function customRule(context: ValidationContext) {
       return {
         Directive(node) {
           const directiveDef = context.getDirective();
@@ -130,11 +129,11 @@ describe('Validate: Limit maximum number of validation errors', () => {
   `;
   const doc = parse(query, { noLocation: true });
 
-  function validateDocument(options) {
+  function validateDocument(options: {| maxErrors?: number |}) {
     return validate(testSchema, doc, undefined, undefined, options);
   }
 
-  function invalidFieldError(fieldName) {
+  function invalidFieldError(fieldName: string) {
     return {
       message: `Cannot query field "${fieldName}" on type "QueryRoot".`,
       locations: [],

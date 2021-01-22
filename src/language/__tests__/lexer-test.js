@@ -1,5 +1,4 @@
-// @flow strict
-
+// eslint-disable-next-line import/no-nodejs-modules
 import { inspect as nodeInspect } from 'util';
 
 import { expect } from 'chai';
@@ -15,18 +14,18 @@ import { Source } from '../source';
 import { TokenKind } from '../tokenKind';
 import { Lexer, isPunctuatorTokenKind } from '../lexer';
 
-function lexOne(str) {
+function lexOne(str: string) {
   const lexer = new Lexer(new Source(str));
   return lexer.advance();
 }
 
-function lexSecond(str) {
+function lexSecond(str: string) {
   const lexer = new Lexer(new Source(str));
   lexer.advance();
   return lexer.advance();
 }
 
-function expectSyntaxError(text) {
+function expectSyntaxError(text: string) {
   return expect(() => lexSecond(text)).to.throw();
 }
 
@@ -907,7 +906,7 @@ describe('Lexer', () => {
 });
 
 describe('isPunctuatorTokenKind', () => {
-  function isPunctuatorToken(text) {
+  function isPunctuatorToken(text: string) {
     return isPunctuatorTokenKind(lexOne(text).kind);
   }
 

@@ -3,11 +3,7 @@
   "plugins": ["@babel/plugin-transform-flow-strip-types"],
   "overrides": [
     {
-      "exclude": [
-        "src/__testUtils__/**/*",
-        "**/__tests__/**/*",
-        "**/__fixtures__/**/*"
-      ],
+      "exclude": ["src/__testUtils__/**/*", "**/__tests__/**/*"],
       "presets": ["@babel/preset-env"],
       "plugins": [
         ["@babel/plugin-transform-classes", { "loose": true }],
@@ -18,12 +14,21 @@
       "env": {
         "cjs": {
           "presets": [["@babel/preset-env", { "modules": "commonjs" }]],
-          "plugins": ["./resources/inline-invariant"]
+          "plugins": [
+            [
+              "./resources/add-extension-to-import-paths",
+              { "extension": "js" }
+            ],
+            "./resources/inline-invariant"
+          ]
         },
         "mjs": {
           "presets": [["@babel/preset-env", { "modules": false }]],
           "plugins": [
-            "./resources/add-extension-to-import-paths",
+            [
+              "./resources/add-extension-to-import-paths",
+              { "extension": "mjs" }
+            ],
             "./resources/inline-invariant"
           ]
         }

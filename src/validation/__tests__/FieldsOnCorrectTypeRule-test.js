@@ -1,9 +1,9 @@
-// @flow strict
-
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import { parse } from '../../language/parser';
+
+import type { GraphQLSchema } from '../../type/schema';
 
 import { buildSchema } from '../../utilities/buildASTSchema';
 
@@ -12,11 +12,11 @@ import { FieldsOnCorrectTypeRule } from '../rules/FieldsOnCorrectTypeRule';
 
 import { expectValidationErrors } from './harness';
 
-function expectErrors(queryStr) {
+function expectErrors(queryStr: string) {
   return expectValidationErrors(FieldsOnCorrectTypeRule, queryStr);
 }
 
-function expectValid(queryStr) {
+function expectValid(queryStr: string) {
   expectErrors(queryStr).to.deep.equal([]);
 }
 
@@ -257,7 +257,7 @@ describe('Validate: Fields on correct type', () => {
   });
 
   describe('Fields on correct type error message', () => {
-    function expectErrorMessage(schema, queryStr) {
+    function expectErrorMessage(schema: GraphQLSchema, queryStr: string) {
       const errors = validate(schema, parse(queryStr), [
         FieldsOnCorrectTypeRule,
       ]);

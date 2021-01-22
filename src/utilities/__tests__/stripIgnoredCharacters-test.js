@@ -1,20 +1,18 @@
-// @flow strict
-
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
 import dedent from '../../__testUtils__/dedent';
 import inspectStr from '../../__testUtils__/inspectStr';
+import kitchenSinkSDL from '../../__testUtils__/kitchenSinkSDL';
+import kitchenSinkQuery from '../../__testUtils__/kitchenSinkQuery';
 
 import invariant from '../../jsutils/invariant';
 
+import { Lexer } from '../../language/lexer';
 import { parse } from '../../language/parser';
 import { Source } from '../../language/source';
-import { Lexer } from '../../language/lexer';
 
 import { stripIgnoredCharacters } from '../stripIgnoredCharacters';
-
-import { kitchenSinkQuery, kitchenSinkSDL } from '../../__fixtures__/index';
 
 const ignoredTokens = [
   // UnicodeBOM ::
@@ -60,7 +58,7 @@ const nonPunctuatorTokens = [
   '"""block\nstring\nvalue"""', // StringValue(BlockString)
 ];
 
-function lexValue(str) {
+function lexValue(str: string): ?string {
   const lexer = new Lexer(new Source(str));
   const value = lexer.advance().value;
 
@@ -68,9 +66,9 @@ function lexValue(str) {
   return value;
 }
 
-function expectStripped(docString) {
+function expectStripped(docString: string) {
   return {
-    toEqual(expected) {
+    toEqual(expected: string): void {
       const stripped = stripIgnoredCharacters(docString);
 
       invariant(
@@ -93,27 +91,13 @@ function expectStripped(docString) {
         `,
       );
     },
-    toStayTheSame() {
+    toStayTheSame(): void {
       this.toEqual(docString);
     },
   };
 }
 
 describe('stripIgnoredCharacters', () => {
-  it('asserts that a source was provided', () => {
-    // $DisableFlowOnNegativeTest
-    expect(() => stripIgnoredCharacters()).to.throw(
-      'Must provide string or Source. Received: undefined.',
-    );
-  });
-
-  it('asserts that a valid source was provided', () => {
-    // $DisableFlowOnNegativeTest
-    expect(() => stripIgnoredCharacters({})).to.throw(
-      'Must provide string or Source. Received: {}.',
-    );
-  });
-
   it('strips ignored characters from GraphQL query document', () => {
     const query = dedent`
       query SomeQuery($foo: String!, $bar: String) {
@@ -130,6 +114,10 @@ describe('stripIgnoredCharacters', () => {
     expect(stripIgnoredCharacters(query)).to.equal(
       'query SomeQuery($foo:String!$bar:String){someField(foo:$foo bar:$bar){a b{c d}}}',
     );
+  });
+
+  it('accepts Source object', () => {
+    expect(stripIgnoredCharacters(new Source('{ a }'))).to.equal('{a}');
   });
 
   it('strips ignored characters from GraphQL SDL document', () => {
@@ -400,7 +388,7 @@ describe('stripIgnoredCharacters', () => {
   });
 
   it('strips ignored characters inside block strings', () => {
-    function expectStrippedString(blockStr) {
+    function expectStrippedString(blockStr: string) {
       const originalValue = lexValue(blockStr);
       const strippedValue = lexValue(stripIgnoredCharacters(blockStr));
 
